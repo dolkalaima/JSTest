@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='css/bootstrap.min.css' type='text/css' media='all'>
+    <link rel='stylesheet' href='css/w2ui-1.4.3.min.css' type='text/css' media='all'>
+    <link rel='stylesheet' href='css/mycss.css' type='text/css' media='all'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/w2ui-1.4.3.min.js"></script>
+    <style type="text/css"> html {height: 100%; overflow: hidden;} body {height: 100%; overflow: hidden; margin: 0; padding: 0;} #layout {height: 100%; text-align: center; } </style>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&coordorder=longlat" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var myMap;
+        var request = new XMLHttpRequest();
+        var jslayer;
+        var counter =1;
+        var JSON1;
+        var JSON2;
+        var JSON3;
+
+            request.open("GET", "http://jstest.my/json/js-layer1.json", false);
+            request.send(null);
+            jslayer = JSON.parse(request.responseText);
+            ymaps.ready(init);
+
+        function init(){
+            myMap = new ymaps.Map("map", {
+                center: [50.3018, 53.20437],
+                zoom: 8
+            });
+            var myObjectManager2 = new ymaps.ObjectManager({clusterize: false});
+            myObjectManager2.add(jslayer);
+
+
+            buildtable(jslayer);
+
+            for (var i = 0; i < jslayer.features.length; i++) {
+                jslayer.features[i].properties.balloonContent = jslayer.features[i].properties.name +'<br>'+'<b>Адрес:</b> '+ jslayer.features[i].properties.adres;
+            }
+            myMap.geoObjects.add(myObjectManager2);
+            myMap.controls
+                    .remove('trafficControl')
+                    .remove('typeSelector')
+                    .remove('searchControl');
+
+
+        }
+
+        function setjson(){
+
+
+        }
+
+        function setjson1() {
+            request.open("GET", "http://jstest.my/json/js-layer1.json", false);
+            request.send(null);
+            jslayer = JSON.parse(request.responseText);
+            var table1 = document.getElementById('datatable');
+            table1.parentNode.removeChild(table1);
+
+            buildtable(jslayer);
+            myMap.geoObjects.removeAll();
+            var myObjectManager2 = new ymaps.ObjectManager({clusterize: false});
+            myObjectManager2.add(jslayer);
+            myMap.geoObjects.add(myObjectManager2);
+            for (var i = 0; i < jslayer.features.length; i++) {
+                jslayer.features[i].properties.balloonContent = jslayer.features[i].properties.name +'<br>'+'<b>Адрес:</b> '+ jslayer.features[i].properties.adres;
+            }
+            counter =1;
+
+        }
+
+        function setjson2() {
+            request.open("GET", "http://jstest.my/json/js-layer2.json", false);
+            request.send(null);
+            jslayer = JSON.parse(request.responseText);
+            var table1 = document.getElementById('datatable');
+            table1.parentNode.removeChild(table1);
+
+            buildtable(jslayer);
+            myMap.geoObjects.removeAll();
+            var myObjectManager2 = new ymaps.ObjectManager({clusterize: false});
+            myObjectManager2.add(jslayer);
+            myMap.geoObjects.add(myObjectManager2);
+            for (var i = 0; i < jslayer.features.length; i++) {
+                jslayer.features[i].properties.balloonContent = jslayer.features[i].properties.name +'<br>'+'<b>Адрес:</b> '+ jslayer.features[i].properties.adres;
+            }
+            counter =2;
+
+        }
+
+        function setjson3() {
+            request.open("GET", "http://jstest.my/json/js-layer3.json", false);
+            request.send(null);
+            jslayer = JSON.parse(request.responseText);
+
+            var table1 = document.getElementById('datatable');
+            table1.parentNode.removeChild(table1);
+
+            buildtable(jslayer);
+            myMap.geoObjects.removeAll();
+                        var myObjectManager2 = new ymaps.ObjectManager({clusterize: false});
+            myObjectManager2.add(jslayer);
+            myMap.geoObjects.add(myObjectManager2);
+            for (var i = 0; i < jslayer.features.length; i++) {
+                jslayer.features[i].properties.balloonContent = jslayer.features[i].properties.name +'<br>'+'<b>Адрес:</b> '+ jslayer.features[i].properties.mestopolozhenie_obekta;
+            }
+            counter =3;
+
+        }
+
+
+
+
+
+
+
+        function buildtable(data)
+        {
+            var container = document.getElementById('mytable');
+            var table;
+
+            table = document.createElement('table');
+            table.setAttribute('border', '1');
+            table.setAttribute('overflow', 'inherit');
+            table.setAttribute('class', 'table table-condensed table-bordered');
+            table.setAttribute('font-size', '.5em');
+            table.setAttribute('id', 'datatable');
+            table.setAttribute('height', '300px');
+
+            var tbody = document.createElement('tbody');
+            for (i = 0; i < data.features.length; i++) {
+                var row = document.createElement('tr');
+                row.setAttribute('height', '20');
+                var j = 0;
+                for (var value in data.features[i].properties) {
+                    if(j>4)
+                    {break;}
+                    var cell = document.createElement('td');
+                    cell.setAttribute('height', '20');
+                    cell.textContent = data.features[i].properties[value];
+                    row.appendChild(cell);
+                    j++;
+                }
+                tbody.appendChild(row);
+            }
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+
+            return(table);
+        }
+
+
+function filter(obj)
+{
+
+    var newJsLayer = [];
+    var s=obj.textin.value;
+       s = s.toLowerCase();
+    if(counter==1)
+{
+    request.open("GET", "http://jstest.my/json/js-layer1.json", false);
+    request.send(null);
+    jslayer = JSON.parse(request.responseText);
+}
+    if(counter==2)
+    {
+        request.open("GET", "http://jstest.my/json/js-layer2.json", false);
+        request.send(null);
+        jslayer = JSON.parse(request.responseText);
+    }
+    if(counter==3)
+    {
+        request.open("GET", "http://jstest.my/json/js-layer3.json", false);
+        request.send(null);
+        jslayer = JSON.parse(request.responseText);
+
+
+    }
+
+
+    myMap.geoObjects.removeAll();
+    var myObjectManager2 = new ymaps.ObjectManager({clusterize: false});
+    var a = 0;
+
+
+//создаем таблицу
+    var table1 = document.getElementById('datatable');
+    table1.parentNode.removeChild(table1);
+
+    var container = document.getElementById('mytable');
+    var table;
+    table = document.createElement('table');
+    table.setAttribute('border', '1');
+    table.setAttribute('overflow', 'inherit');
+    table.setAttribute('class', 'table table-condensed table-bordered');
+    table.setAttribute('font-size', '.5em');
+    table.setAttribute('id', 'datatable');
+    table.setAttribute('height', '300px');
+    var tbody = document.createElement('tbody');
+
+
+
+
+for  (var i= 0; i<jslayer.features.length; i++)
+{
+    if(jslayer.features[i].properties.name.toLowerCase().indexOf(s.toLowerCase())!= -1)
+    {
+        newJsLayer[a] = jslayer.features[i];
+        myObjectManager2.add(jslayer.features[i]);
+        newJsLayer[a].properties.balloonContent =  jslayer.features[i].properties.name +'<br>'+'<b>Адрес:</b> '+jslayer.features[i].properties.adres;
+        //новая строка
+        var row = document.createElement('tr');
+        row.setAttribute('height', '20');
+        var j = 0;
+        for (var value in jslayer.features[i].properties) {
+            if(j>4)
+            {break;}
+            var cell = document.createElement('td');
+            cell.setAttribute('height', '20');
+            cell.textContent = jslayer.features[i].properties[value];
+            row.appendChild(cell);
+            j++;
+        }
+        tbody.appendChild(row);
+
+        a++;
+    }
+
+}
+
+    myMap.geoObjects.add(myObjectManager2);
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+
+}
+        $(".item").hover(function() {
+            $(".item").addClass("light");
+            $(this).removeClass("light");
+        }, function() {
+            $(".item").removeClass("light");
+        });
+    </script>
+    <script>
+        $(function () {
+            var pstyle = 'background-color: #FFFFFF; border: 1px solid #dfdfdf; padding: 5px;';
+            $('#layout').w2layout({
+                name: 'layout',
+                panels: [
+               //     { type: 'main',  style: pstyle, content: document.getElementById('map') },
+
+                    { type: 'bottom', size: 250, resizable: true, style: pstyle, content: document.getElementById('mytable') }
+                ]
+            });
+        });
+
+    </script>
+    <title>jstest</title>
+</head>
+<body>
+
+   <div id="map" class="item first" style="width:100%; height: 400px"></div>
+   <div class="container" style="position: absolute; top:10px">
+    <div class="row" >
+<div class="col-sm-9"  style=" left:50px; ">
+<br>
+<input type="button" class="btn btn-sm btn-danger" onClick="setjson1()"  value="json1">
+    <input type="button" class="btn btn-sm btn-danger" onClick="setjson2()" value="json2">
+    <input type="button" class="btn btn-sm btn-danger" onClick="setjson3()" value="json3">
+</div>
+      <div class="col-sm-3"  style=" left:50px; "><br>
+            <form class="form-inline" name="form1" onSubmit="return false;">
+                <div class="form-group">
+                    <input type="text" name="textin" class="form-control" ></div>
+                <input type="button" class="btn btn-success" value="Поиск" onclick="filter(form1)">
+            </form>
+        </div>
+    </div>
+
+   </div>
+<div id="mytable" class="item second" ></div>
+    <div id="layout" style="width: 100%; height: 250px;"></div>
+
+</body>
+</html>
